@@ -63,8 +63,8 @@ export class UserService {
     return this.http.get(this.hostServer + '/rest/user/whoami').pipe(map((response: any) => response.user), catchError((err) => { throw err }))
   }
 
-  oauthLogin (accessToken: string) {
-    return this.http.get('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + accessToken)
+  oauthLogin (accessToken: string,state: string) {
+    return this.http.get('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + accessToken+'&state='+state)
   }
 
   saveLastLoginIp () {

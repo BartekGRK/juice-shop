@@ -17,7 +17,12 @@ export class OAuthComponent implements OnInit {
   constructor (private readonly cookieService: CookieService, private readonly userService: UserService, private readonly router: Router, private readonly route: ActivatedRoute, private readonly ngZone: NgZone) { }
 
   ngOnInit () {
-    this.userService.oauthLogin(this.parseRedirectUrlParams().access_token).subscribe((profile: any) => {
+    this.userService.oauthLogin(this.parseRedirectUrlParams().access_token,this.parseRedirectUrlParams().state).subscribe((profile: any) => {
+    
+      const storedState = localStorage.getItem('state')
+      if (storedState != this.parseRedirectUrlParams().state) {
+        this.invalidateSession(new Error('Invalid state value'))
+      }
       const password = btoa(profile.email.split('').reverse().join(''))
       this.userService.save({ email: profile.email, password: password, passwordRepeat: password }).subscribe(() => {
         this.login(profile)
