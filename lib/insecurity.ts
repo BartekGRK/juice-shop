@@ -50,10 +50,10 @@ exports.cutOffPoisonNullByte = (str: string) => {
   return str
 }
 
-exports.isAuthorized = () => expressJwt({ secret: publicKey })
-exports.denyAll = () => expressJwt({ secret: '' + Math.random() })
-exports.authorize = (user = {}) => jwt.sign(user, privateKey, { expiresInMinutes: 60 * 5, algorithm: 'RS256' })
-const verify = (token: string) => jws.verify(token, publicKey)
+exports.isAuthorized = () => expressJwt({ secret: this.publicKey, algorithms: ['RS256'] })
+exports.denyAll = () => expressJwt({ secret: '' + Math.random(), algorithms: ['RSA256'] })
+exports.authorize = (user = {}) => jwt.sign(user, privateKey, { expiresIn: '180m', algorithm: 'RS256' })
+exports.verify = (token) => jws.verify(token, 'RS256', publicKey)
 module.exports.verify = verify
 const decode = (token: string) => { return jws.decode(token).payload }
 module.exports.decode = decode
